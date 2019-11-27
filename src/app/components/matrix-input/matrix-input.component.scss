@@ -1,0 +1,10 @@
+:host {
+  .d-flex {
+    mat-form-field {
+      max-width: 50px;
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
+    }
+  }
+}

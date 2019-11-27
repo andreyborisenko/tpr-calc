@@ -1,0 +1,16 @@
+<div>
+  <div
+    class="d-flex justify-content-start"
+    *ngFor="let row of matrix; index as i"
+  >
+    <mat-form-field *ngFor="let cell of row; index as j">
+      <input
+        type="number"
+        matInput
+        min="1"
+        [(ngModel)]="matrix[i][j]"
+        [placeholder]="'[' + i + '][' + j + ']'"
+      />
+    </mat-form-field>
+  </div>
+</div>
