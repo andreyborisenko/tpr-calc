@@ -40,9 +40,18 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InitialDataComponent } from './components/initial-data/initial-data.component';
 import { SendersReceiversComponent } from './components/senders-receivers/senders-receivers.component';
+import { ProblemDataDisplayComponent } from './components/problem-data-display/problem-data-display.component';
+import { ProblemTableComponent } from './components/problem-table/problem-table.component';
 
 @NgModule({
-  declarations: [AppComponent, MatrixInputComponent, InitialDataComponent, SendersReceiversComponent],
+  declarations: [
+    AppComponent,
+    MatrixInputComponent,
+    InitialDataComponent,
+    SendersReceiversComponent,
+    ProblemDataDisplayComponent,
+    ProblemTableComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -80,6 +89,7 @@ import { SendersReceiversComponent } from './components/senders-receivers/sender
     MatSortModule,
     MatPaginatorModule,
   ],
+  entryComponents: [ProblemDataDisplayComponent],
   providers: [],
   bootstrap: [AppComponent],
 })

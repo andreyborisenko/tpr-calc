@@ -1,0 +1,23 @@
+<table>
+  <tr *ngFor="let row of costs; let i = index">
+    <td *ngFor="let cost of row; let j = index">
+      <div
+        class="d-flex flex-column justify-content-center align-items-center p-2"
+      >
+        <div class="mb-1">
+          <span *ngIf="path && path[i][j]" class="font-weight-bold ">{{
+            path[i][j]
+          }}</span>
+          <span
+            *ngIf="changes && changes[i][j]"
+            class="font-weight-bold"
+            [class.text-warning]="changes[i][j] < 0"
+            [class.text-success]="changes[i][j] > 0"
+            >&nbsp;{{ changes[i][j] }}</span
+          >
+        </div>
+        <span>{{ cost }}</span>
+      </div>
+    </td>
+  </tr>
+</table>

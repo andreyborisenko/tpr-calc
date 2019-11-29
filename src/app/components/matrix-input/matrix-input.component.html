@@ -14,7 +14,7 @@
             "
           >
             <input
-              type="number"
+              [type]="type === 'default' ? 'number' : 'text'"
               matInput
               min="1"
               [formControl]="cell"
@@ -27,5 +27,5 @@
       </div>
     </div>
   </form>
-  <button mat-raised-button (click)="resetMatrix.emit()">Reset</button>
+  <!-- <button mat-raised-button (click)="resetMatrix.emit()">Reset</button> -->
 </div>

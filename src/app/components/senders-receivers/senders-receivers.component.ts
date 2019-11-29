@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormArray, Validators, FormBuilder } from '@angular/forms';
 
+const defaultSendersCount = 3;
+const defaultReceiversCount = 5;
+const defaultSenders = [500, 340, 220];
+const defaultReceivers = [275, 190, 135, 210, 250];
+
 @Component({
   selector: 'app-senders-receivers',
   templateUrl: './senders-receivers.component.html',
@@ -9,16 +14,14 @@ import { FormGroup, FormArray, Validators, FormBuilder } from '@angular/forms';
 export class SendersReceiversComponent implements OnInit {
   form: FormGroup = new FormGroup({});
 
-  private readonly defaultSendersCount = 3;
-  private readonly defaultReceiversCount = 5;
-
   sendersGroup: FormGroup;
   receiversGroup: FormGroup;
 
-  constructor(private readonly fb: FormBuilder) {}
+  constructor(private readonly fb: FormBuilder) {
+    this.initForm();
+  }
 
   ngOnInit() {
-    this.initForm();
     for (const group of [this.sendersGroup, this.receiversGroup]) {
       group.controls.count.valueChanges.subscribe(v => {
         this.fitArray(group.controls.array as FormArray, parseInt(v, 10));
@@ -30,16 +33,16 @@ export class SendersReceiversComponent implements OnInit {
     this.form = this.fb.group(
       {
         senders: this.fb.group({
-          count: this.fb.control(this.defaultSendersCount, [
+          count: this.fb.control(defaultSendersCount, [
             Validators.min(2),
             Validators.max(10),
             Validators.required,
           ]),
           array: this.fb.array(
-            Array(this.defaultSendersCount)
+            Array(defaultSendersCount)
               .fill(50)
-              .map(s =>
-                this.fb.control(s, [
+              .map((s, i) =>
+                this.fb.control(defaultSenders[i] || s, [
                   Validators.min(1),
                   Validators.max(500),
                   Validators.required,
@@ -48,18 +51,16 @@ export class SendersReceiversComponent implements OnInit {
           ),
         }),
         receivers: this.fb.group({
-          count: this.fb.control(this.defaultReceiversCount, [
+          count: this.fb.control(defaultReceiversCount, [
             Validators.min(2),
             Validators.max(10),
             Validators.required,
           ]),
           array: this.fb.array(
-            Array(this.defaultReceiversCount)
-              .fill(
-                (50 * this.defaultSendersCount) / this.defaultReceiversCount,
-              )
-              .map(s =>
-                this.fb.control(s, [
+            Array(defaultReceiversCount)
+              .fill((50 * defaultSendersCount) / defaultReceiversCount)
+              .map((r, i) =>
+                this.fb.control(defaultReceivers[i] || r, [
                   Validators.min(1),
                   Validators.max(500),
                   Validators.required,

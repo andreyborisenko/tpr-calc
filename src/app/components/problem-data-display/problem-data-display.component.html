@@ -1,0 +1,16 @@
+<div class="proble-data">
+  <app-problem-table [path]="path" [costs]="costs"></app-problem-table>
+
+  <div *ngIf="path" class="d-flex flex-wrap my-3">
+    <div class="font-weight-bold text-danger">F(x) =&nbsp;</div>
+    <div *ngFor="let part of formulaParts; let i = index">
+      <span>{{ part.amount }} * {{ costs[part.i][part.j] }} </span>
+      <span *ngIf="i < formulaParts.length - 1"> +&nbsp;</span>
+    </div>
+    <div>
+      &nbsp;=&nbsp;<span class="font-weight-bold text-danger">{{
+        formulaResult
+      }}</span>
+    </div>
+  </div>
+</div>
