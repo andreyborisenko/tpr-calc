@@ -1,9 +1,9 @@
 export class TransportationProblem {
-  senders: number[];
-  receivers: number[];
+  shipments: number[][];
 
   constructor(
-    public readonly sendersCount: number,
-    public readonly receiversCount: number,
+    public readonly senders: number[],
+    public readonly receivers: number[],
+    public readonly costsMatrix: number[][],
   ) {}
 }

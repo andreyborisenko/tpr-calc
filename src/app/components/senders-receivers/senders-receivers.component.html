@@ -1,0 +1,61 @@
+<form [formGroup]="form">
+  <div formGroupName="senders">
+    <mat-form-field>
+      <input
+        type="number"
+        matInput
+        min="2"
+        max="10"
+        placeholder="Senders count"
+        formControlName="count"
+      />
+    </mat-form-field>
+    <div class="d-flex">
+      <mat-form-field
+        *ngFor="
+          let sender of sendersGroup.controls.array.controls;
+          let i = index
+        "
+        class="mr-2"
+      >
+        <input
+          type="number"
+          matInput
+          [formControl]="sender"
+          [placeholder]="'Sender #' + (i + 1)"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+  <div formGroupName="receivers" class="mt-2">
+    <mat-form-field>
+      <input
+        type="number"
+        matInput
+        min="2"
+        max="10"
+        placeholder="Receivers count"
+        formControlName="count"
+      />
+    </mat-form-field>
+    <div class="d-flex flex-wrap">
+      <mat-form-field
+        *ngFor="
+          let sender of receiversGroup.controls.array.controls;
+          let i = index
+        "
+        class="mr-2"
+      >
+        <input
+          type="number"
+          matInput
+          [formControl]="sender"
+          [placeholder]="'Receiver #' + (i + 1)"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+  <mat-error *ngIf="form.errors?.sumMissmatch" class="mb-2">
+    {{ form.errors.sumMissmatch }}
+  </mat-error>
+</form>

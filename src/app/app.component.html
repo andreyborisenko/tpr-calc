@@ -1,26 +1,3 @@
 <div class="container">
-  <div class="d-flex justify-content-start">
-    <mat-form-field class="mr-2">
-      <input
-        type="number"
-        matInput
-        placeholder="Senders count"
-        [(ngModel)]="sendersCount"
-      />
-    </mat-form-field>
-    <mat-form-field>
-      <input
-        type="number"
-        matInput
-        placeholder="Receivers count"
-        [(ngModel)]="receiversCount"
-      />
-    </mat-form-field>
-  </div>
-  <div>
-    <app-matrix-input
-      [rows]="sendersCount"
-      [cols]="receiversCount"
-    ></app-matrix-input>
-  </div>
+  <app-initial-data></app-initial-data>
 </div>

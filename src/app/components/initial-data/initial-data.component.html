@@ -1,0 +1,77 @@
+<mat-vertical-stepper
+  [linear]="true"
+  (selectionChange)="onStepSelected($event)"
+>
+  <mat-step [stepControl]="sendersReceivers.form">
+    <ng-template matStepLabel>Senders-Receivers</ng-template>
+    <app-senders-receivers></app-senders-receivers>
+    <button mat-raised-button matStepperNext>
+      Next
+    </button>
+  </mat-step>
+  <mat-step [stepControl]="matrix.form">
+    <ng-template matStepLabel>Matrix</ng-template>
+    <app-matrix-input (resetMatrix)="initMatrix()"></app-matrix-input>
+  </mat-step>
+</mat-vertical-stepper>
+
+<!-- <div class="d-flex flex-column justify-content-start">
+  <div>
+    <div class="d-flex">
+      <mat-form-field class="mr-2">
+        <input
+          type="number"
+          matInput
+          placeholder="Senders count"
+          [(ngModel)]="sendersCount"
+        />
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="onSendersChange()">
+        Refill
+      </button>
+    </div>
+    <div class="d-flex">
+      <mat-form-field
+        class="mr-2"
+        *ngFor="let sender of senders; let i = index"
+      >
+        <input
+          type="number"
+          min="1"
+          matInput
+          [(ngModel)]="senders[i]"
+          placeholder="'Sender #' + i"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+  <div>
+    <div class="d-flex">
+      <mat-form-field>
+        <input
+          type="number"
+          matInput
+          placeholder="Receivers count"
+          [(ngModel)]="receiversCount"
+        />
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="onReceiversChange()">
+        Refill
+      </button>
+    </div>
+    <div class="d-flex">
+      <mat-form-field
+        class="mr-2"
+        *ngFor="let receiver of receivers; let i = index"
+      >
+        <input
+          type="number"
+          min="1"
+          matInput
+          [(ngModel)]="receivers[i]"
+          placeholder="'Receiver #' + i"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+</div> -->

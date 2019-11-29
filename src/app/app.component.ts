@@ -6,8 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  sendersCount = 3;
-  receiversCount = 5;
-
   constructor() {}
 }

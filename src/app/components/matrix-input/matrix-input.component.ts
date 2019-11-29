@@ -1,4 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectorRef,
+  Output,
+  EventEmitter,
+} from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 
 @Component({
   selector: 'app-matrix-input',
@@ -6,24 +14,59 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./matrix-input.component.scss'],
 })
 export class MatrixInputComponent implements OnInit {
-  @Input() rows: number;
+  @Input() rows = 1;
 
-  @Input() cols: number;
+  @Input() cols = 1;
 
   @Input() defaultValue = 1;
 
-  matrix: number[][];
+  @Output() resetMatrix = new EventEmitter<null>();
 
-  constructor() {}
+  formInited = false;
 
-  ngOnInit() {
-    this.initMatrix();
+  form: FormGroup;
+
+  constructor(private readonly fb: FormBuilder) {
+    this.initForm();
   }
 
-  private initMatrix() {
-    this.matrix = Array(this.rows);
-    for (let i = 0; i < this.rows; i++) {
-      this.matrix[i] = Array(this.cols).fill(this.defaultValue);
-    }
+  ngOnInit() {
+    this.initForm();
+  }
+
+  initMatrix(rows: number, cols: number) {
+    this.rows = rows;
+    this.cols = cols;
+    this.initForm();
+    this.formInited = true;
+    // this.cdr.detectChanges();
+  }
+
+  private initForm() {
+    this.form = this.fb.group({
+      rows: this.fb.array(
+        Array(this.rows)
+          .fill(0)
+          .map(r =>
+            this.fb.group({
+              cells: this.fb.array(
+                Array(this.cols)
+                  .fill(this.defaultValue)
+                  .map(c =>
+                    this.fb.control(c, [
+                      Validators.min(1),
+                      Validators.max(20),
+                      Validators.required,
+                    ]),
+                  ),
+              ),
+            }),
+          ),
+      ),
+    });
+  }
+
+  getMatrix() {
+    return (this.form.controls.rows as FormArray).value.map(r => r.cells);
   }
 }

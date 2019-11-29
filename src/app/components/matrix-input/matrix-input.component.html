@@ -1,16 +1,31 @@
 <div>
-  <div
-    class="d-flex justify-content-start"
-    *ngFor="let row of matrix; index as i"
-  >
-    <mat-form-field *ngFor="let cell of row; index as j">
-      <input
-        type="number"
-        matInput
-        min="1"
-        [(ngModel)]="matrix[i][j]"
-        [placeholder]="'[' + i + '][' + j + ']'"
-      />
-    </mat-form-field>
-  </div>
+  <form [formGroup]="form">
+    <div formArrayName="rows">
+      <div
+        class="d-flex justify-content-start"
+        *ngFor="let row of form.get('rows').controls; let rowIndex = index"
+        [formGroupName]="rowIndex"
+      >
+        <div formArrayName="cells">
+          <mat-form-field
+            *ngFor="
+              let cell of row.get('cells').controls;
+              let cellIndex = index
+            "
+          >
+            <input
+              type="number"
+              matInput
+              min="1"
+              [formControl]="cell"
+              [placeholder]="
+                '[' + (rowIndex + 1) + '][' + (cellIndex + 1) + ']'
+              "
+            />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </form>
+  <button mat-raised-button (click)="resetMatrix.emit()">Reset</button>
 </div>
