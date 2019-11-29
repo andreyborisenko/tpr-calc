@@ -76,7 +76,5 @@ export class InitialDataComponent implements OnInit {
       this.sendersReceiversComponent.senders.slice(0),
       this.sendersReceiversComponent.receivers.slice(0),
     );
-
-    TransportationProblem.getClosedPath(component.instance.path, 0, 3);
   }
 }

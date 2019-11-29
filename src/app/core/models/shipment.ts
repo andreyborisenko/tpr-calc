@@ -1,8 +1,8 @@
 export class Shipment {
   constructor(
-    public readonly sender: number,
-    public readonly receiver: number,
+    public readonly x: number,
+    public readonly y: number,
     public readonly cost: number,
-    public readonly quantity: number
+    public readonly quantity: number,
   ) {}
 }
