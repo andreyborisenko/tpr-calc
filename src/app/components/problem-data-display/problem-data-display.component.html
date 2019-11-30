@@ -1,5 +1,18 @@
 <div class="proble-data">
-  <app-problem-table [path]="path" [costs]="costs"></app-problem-table>
+  <div class="d-flex">
+    <app-problem-table [path]="path" [costs]="costs"></app-problem-table>
+    <canvas
+      class="mr-2"
+      *ngIf="type === 'triangle'"
+      baseChart
+      width="400"
+      height="200"
+      [datasets]="chartDatasets"
+      [options]="chartOptions"
+      [colors]="chartColors"
+      chartType="scatter"
+    ></canvas>
+  </div>
 
   <div *ngIf="path" class="d-flex flex-wrap my-3">
     <div class="font-weight-bold text-danger">F(x) =&nbsp;</div>

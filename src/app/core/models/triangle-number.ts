@@ -12,4 +12,8 @@ export class TriangleNumber {
   toString() {
     return `(${this.low}, ${this.mid}, ${this.high})`;
   }
+
+  toArray() {
+    return [this.low, this.mid, this.high];
+  }
 }

@@ -1,12 +1,11 @@
-import { Matrix, TrianglesMatrix } from './matrix';
+import { Matrix, TrianglesMatrix } from '../models/matrix';
+import { Injectable } from '@angular/core';
+import { TriangleNumber } from '../models/triangle-number';
+import { Shipment } from '../models/shipment';
 
-interface Shipment {
-  i: number;
-  j: number;
-  neighbors?: Shipment[];
-}
-export class TransportationProblem {
-  static getNWCornerPath(senders: number[], receivers: number[]): Matrix {
+@Injectable({ providedIn: 'root' })
+export class TransportationProblemService {
+  getNWCornerPath(senders: number[], receivers: number[]): Matrix {
     const path = [];
 
     for (let i = 0, nw = 0; i < senders.length; i++) {
@@ -29,11 +28,47 @@ export class TransportationProblem {
     return path;
   }
 
-  static calculateCost(path: Matrix, costs: Matrix) {}
+  calculateCost(path: Matrix, costs: Matrix) {
+    let sum = 0;
 
-  static calculateTriangleCost(path: Matrix, costs: TrianglesMatrix) {}
+    for (let i = 0; i < costs.length; i++) {
+      for (let j = 0; j < costs[0].length; j++) {
+        if (path[i][j]) {
+          sum += path[i][j] * costs[i][j];
+        }
+      }
+    }
 
-  static getClosedPath(path: Matrix, startI: number, startJ: number): Matrix {
+    return sum;
+  }
+
+  calculateTriangleCost(path: Matrix, costs: TrianglesMatrix) {
+    let sum = new TriangleNumber(0, 0, 0);
+
+    for (let i = 0; i < costs.length; i++) {
+      for (let j = 0; j < costs[0].length; j++) {
+        if (path[i][j]) {
+          const { low, high, mid } = costs[i][j];
+
+          const [lowCost, midCost, highCost] = [
+            path[i][j] * low,
+            path[i][j] * mid,
+            path[i][j] * high,
+          ];
+
+          sum = new TriangleNumber(
+            sum.low + lowCost,
+            sum.mid + midCost,
+            sum.high + highCost,
+          );
+        }
+      }
+    }
+
+    return sum;
+  }
+
+  getClosedPath(path: Matrix, startI: number, startJ: number): Matrix {
     const startShipment = { i: startI, j: startJ };
 
     let shipments: Shipment[] = path
@@ -48,7 +83,7 @@ export class TransportationProblem {
     while (true) {
       shipments = shipments
         .map(s => {
-          s.neighbors = TransportationProblem.getNeighbors(s, shipments);
+          s.neighbors = this.getNeighbors(s, shipments);
           return s;
         })
         .filter(s => s.neighbors[0] && s.neighbors[1]);
@@ -65,14 +100,12 @@ export class TransportationProblem {
 
     for (let i = 0; i < shipments.length; i++) {
       stones[i] = prev;
-      prev = TransportationProblem.getNeighbors(prev, shipments)[i % 2];
+      prev = this.getNeighbors(prev, shipments)[i % 2];
     }
 
     const minQuantity = Math.min(
       ...stones.filter((s, i) => i % 2).map(s => path[s.i][s.j]),
     );
-
-    console.log(stones, minQuantity);
 
     const changesMatrix = Array(path.length)
       .fill(0)
@@ -82,31 +115,10 @@ export class TransportationProblem {
       changesMatrix[stones[i].i][stones[i].j] = minQuantity * (i % 2 ? -1 : 1);
     }
 
-    console.log(changesMatrix);
-
-    // if (path[x][y]) {
-    //   return [[]];
-    // }
-
-    // const lastInRow = path.map(
-    //   r => r.length - [...r].reverse().findIndex(c => c) - 1,
-    // );
-
-    // const firstInRow = path.map(r => r.findIndex(c => c));
-    // const firstInCol = Array(path[0].length).map((c, i) => path.map(r => r[i]));
-
-    // console.log(firstInRow);
-    // console.log(lastInRow);
-    // console.log(firstInCol);
-
-    // const getNeighbors = (x, y) => {
-    //   // for (let i = 0; )
-    // };
-
-    return [[]];
+    return changesMatrix;
   }
 
-  static getNeighbors(search: Shipment, shipments: Shipment[]): Shipment[] {
+  getNeighbors(search: Shipment, shipments: Shipment[]): Shipment[] {
     const neighbors = [];
     for (const shipment of shipments) {
       if (search.i === shipment.i && search.j === shipment.j) {
@@ -128,7 +140,7 @@ export class TransportationProblem {
     return neighbors;
   }
 
-  static updatePath(path: Matrix, changes: Matrix): Matrix {
+  updatePath(path: Matrix, changes: Matrix): Matrix {
     const resPath = [];
 
     for (let i = 0; i < path.length; i++) {

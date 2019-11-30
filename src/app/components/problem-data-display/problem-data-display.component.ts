@@ -1,6 +1,14 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { TrianglesMatrix, Matrix } from 'src/app/core/models/matrix';
 import { TriangleNumber } from 'src/app/core/models/triangle-number';
+import { TransportationProblemService } from 'src/app/core/services/transportation-problem.service';
+import {
+  ChartDataSets,
+  ChartData,
+  ChartOptions,
+  ChartConfiguration,
+} from 'chart.js';
+import { Shipment } from 'src/app/core/models/shipment';
 
 interface FormulaPart {
   amount: number;
@@ -20,12 +28,44 @@ export class ProblemDataDisplayComponent implements OnInit {
 
   @Input() costs: Matrix | TrianglesMatrix;
 
+  @Input() originalResult: TriangleNumber;
+
+  @Input() accentShipment: Shipment;
+
   formulaParts: FormulaPart[] = [];
 
-  constructor() {}
+  formulaResult: number | TriangleNumber;
+
+  readonly chartColors = [
+    {
+      borderColor: '#e67e22',
+      backgroundColor: 'rgba(255,255,2555,0.1)',
+      showLine: true,
+      lineTension: 0,
+    },
+  ];
+
+  readonly chartOptions: ChartOptions = {
+    responsive: true,
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            min: 0,
+            max: 1,
+          },
+        },
+      ],
+    },
+  };
+
+  chartDatasets: ChartDataSets[] = [];
+
+  chartLabels = [];
+
+  constructor(private readonly trService: TransportationProblemService) {}
 
   ngOnInit() {
-    console.log('changes', this.path);
     if (this.path) {
       for (let i = 0; i < this.path.length; i++) {
         for (let j = 0; j < this.path[i].length; j++) {
@@ -38,30 +78,79 @@ export class ProblemDataDisplayComponent implements OnInit {
           }
         }
       }
+      this.formulaResult =
+        this.type === 'default'
+          ? this.trService.calculateCost(this.path, this.costs as Matrix)
+          : this.trService.calculateTriangleCost(
+              this.path,
+              this.costs as TrianglesMatrix,
+            );
     }
+
+    this.setChartData();
   }
 
-  get formulaResult() {
-    return this.formulaParts.reduce(
-      (a, b) => {
-        if (typeof a === 'number') {
-          return (a as number) + b.amount * (this.costs as Matrix)[b.i][b.j];
-        } else {
-          const { low, high, mid } = (this.costs as TrianglesMatrix)[b.i][b.j];
+  private setChartData() {
+    console.log(this.originalResult);
 
-          const [lowCost, midCost, highCost] = [
-            b.amount * low,
-            b.amount * mid,
-            b.amount * high,
-          ];
-          return new TriangleNumber(
-            a.low + lowCost,
-            a.mid + midCost,
-            a.high + highCost,
-          );
-        }
-      },
-      this.type === 'default' ? 0 : new TriangleNumber(0, 0, 0),
-    );
+    if (this.originalResult) {
+      this.chartColors.unshift({
+        borderColor: '#3498db',
+        backgroundColor: 'rgba(255,255,2555,0.0)',
+        showLine: true,
+        lineTension: 0,
+      });
+    }
+
+    if (this.accentShipment) {
+      this.chartLabels = [
+        'Z0',
+        `Z${this.accentShipment.i}${this.accentShipment.j}`,
+      ];
+    }
+
+    if (this.originalResult) {
+      this.chartDatasets.push({
+        label: 'Z0',
+        data: [
+          {
+            x: this.originalResult.low,
+            y: 0,
+          },
+          {
+            x: this.originalResult.mid,
+            y: 1,
+          },
+          {
+            x: this.originalResult.high,
+            y: 0,
+          },
+        ],
+      });
+    }
+
+    const result = this.formulaResult as TriangleNumber;
+
+    console.log(result);
+
+    this.chartDatasets.push({
+      label: this.accentShipment
+        ? `Z${this.accentShipment.i}${this.accentShipment.j}`
+        : 'F(x)',
+      data: [
+        {
+          x: result.low,
+          y: 0,
+        },
+        {
+          x: result.mid,
+          y: 1,
+        },
+        {
+          x: result.high,
+          y: 0,
+        },
+      ],
+    });
   }
 }
