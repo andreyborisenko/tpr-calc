@@ -21,6 +21,7 @@ import { criterionNames } from 'src/app/core/services/criterion-solvers/criterio
 import { MatDialog } from '@angular/material';
 import { CriterionPickerComponent } from '../criterion-picker/criterion-picker.component';
 import { ICriterionResult } from 'src/app/core/services/criterion-solvers/criterion-result.interface';
+import { CriterionComponent } from '../criterion/criterion.component';
 
 interface Solution {
   costs: TrianglesMatrix;
@@ -50,10 +51,16 @@ export class InitialDataComponent implements OnInit {
   @ViewChild('pathContainer', { static: true, read: ViewContainerRef })
   pathContainer: ViewContainerRef;
 
+  @ViewChild('allCriterionsTemplate', { static: true, read: ViewContainerRef })
+  allCriterionsContainer: ViewContainerRef;
+
   @ViewChildren(CycleSolverComponent) solutionComponents: QueryList<
     CycleSolverComponent
   >;
 
+  @ViewChildren(CriterionComponent) criterionComponents: QueryList<
+    CriterionComponent
+  >;
   // criterionMatrix = [
   //   [-830, -1305, -2110],
   //   [-830, -1380, -2160],
@@ -86,6 +93,7 @@ export class InitialDataComponent implements OnInit {
     private readonly trService: TransportationProblemService,
     private readonly dialog: MatDialog,
     private readonly cdr: ChangeDetectorRef,
+    private readonly resolver: ComponentFactoryResolver,
   ) {}
 
   ngOnInit() {}
@@ -101,6 +109,8 @@ export class InitialDataComponent implements OnInit {
       this.solutions.length === 0
     ) {
       this.solve();
+    } else if (event.selectedStep.ariaLabel === 'all-criterions') {
+      this.calculateByAllCriterions();
     }
   }
 
@@ -138,6 +148,7 @@ export class InitialDataComponent implements OnInit {
 
     this.cdr.detectChanges();
     this.allCriterionsMatrix = this.solutionComponents.last.collectSolutions();
+    this.calculateByAllCriterions();
     this.cdr.detectChanges();
   }
 
@@ -151,6 +162,22 @@ export class InitialDataComponent implements OnInit {
       this.solutionComponents.last.criterionComponent.result.bestResultIndex ===
         0
     );
+  }
+
+  private calculateByAllCriterions() {
+    this.criterionComponents.forEach(c => {
+      c.matrix = this.allCriterionsMatrix = this.solutionComponents.last.collectSolutions();
+      c.ngOnInit();
+    });
+    // this.allCriterionsContainer.clear();
+    // const factory = this.resolver.resolveComponentFactory(CriterionComponent);
+    // const component = this.allCriterionsContainer.createComponent(factory);
+    // component.instance.solutionIndex = 1;
+    // component.instance.criterion = ;
+    // component.instance.path = this.trService.getNWCornerPath(
+    //   this.sendersReceiversComponent.senders.slice(0),
+    //   this.sendersReceiversComponent.receivers.slice(0),
+    // );
   }
 
   // private solve() {
