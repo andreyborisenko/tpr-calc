@@ -1,0 +1,36 @@
+<div>
+  <h4>{{ criterionName }}</h4>
+  <table>
+    <thead>
+      <td></td>
+      <td *ngFor="let col of matrix[0]; let i = index">F{{ i + 1 }}</td>
+      <td *ngFor="let additionalCompName of result.additionalCompNames">
+        {{ additionalCompName }}
+      </td>
+      <td>Result</td>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of matrix; let i = index">
+        <td>
+          E<span class="subsup"
+            ><sup>{{ solutionIndex }}</sup
+            ><sub>{{ i }}</sub></span
+          >
+        </td>
+        <td *ngFor="let cell of row">
+          {{ cell }}
+        </td>
+        <td
+          *ngFor="
+            let additionalComputation of result.additionalComputations[i];
+            let j = index
+          "
+          [class.bg-success]="i === result.bestResultIndex"
+        >
+          {{ additionalComputation }}
+        </td>
+        <td><span *ngIf="i === result.bestResultIndex">*****</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

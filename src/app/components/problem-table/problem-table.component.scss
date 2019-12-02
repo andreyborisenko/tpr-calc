@@ -5,6 +5,14 @@
 
     td {
       border: 1px solid black;
+
+      &.visited {
+        background-color: #28a74550;
+      }
+
+      i {
+        font-style: normal;
+      }
     }
   }
 }

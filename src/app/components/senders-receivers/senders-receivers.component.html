@@ -10,7 +10,7 @@
         formControlName="count"
       />
     </mat-form-field>
-    <div class="d-flex">
+    <div class="d-flex flex-wrap">
       <mat-form-field
         *ngFor="
           let sender of sendersGroup.controls.array.controls;
@@ -55,7 +55,25 @@
       </mat-form-field>
     </div>
   </div>
-  <mat-error *ngIf="form.errors?.sumMissmatch" class="mb-2">
-    {{ form.errors.sumMissmatch }}
-  </mat-error>
+  <div class="d-flex" formArrayName="outerStates" class="mt-2">
+    <mat-form-field
+      *ngFor="
+        let outerState of form.controls.outerStates.controls;
+        let i = index
+      "
+      class="mr-2"
+    >
+      <input
+        type="number"
+        matInput
+        [formControl]="outerState"
+        [placeholder]="'Q #' + (i + 1)"
+      />
+    </mat-form-field>
+  </div>
+  <div *ngIf="form.errors" class="my-3">
+    <mat-error *ngFor="let error of form.errors | keyvalue" class="mb-2">
+      {{ error.value }}
+    </mat-error>
+  </div>
 </form>

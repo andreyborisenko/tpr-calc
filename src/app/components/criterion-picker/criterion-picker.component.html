@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Choose criterion</h1>
+<div mat-dialog-content>
+  <mat-select [(value)]="selectedCriterion">
+    <mat-option *ngFor="let criterion of criterions" [value]="criterion">{{
+      getCriterionName(criterion)
+    }}</mat-option>
+  </mat-select>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="selectedCriterion" cdkFocusInitial>
+    OK
+  </button>
+</div>

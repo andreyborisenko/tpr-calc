@@ -2,6 +2,17 @@
   canvas {
     flex: 1 0 100%;
     max-width: 500px;
-    max-height: 400px;
+    max-height: 190px;
+  }
+
+  .formula {
+    vertical-align: middle;
+    align-items: center;
+    div {
+      vertical-align: middle;
+      &:first-child {
+        font-size: 1.5rem;
+      }
+    }
   }
 }

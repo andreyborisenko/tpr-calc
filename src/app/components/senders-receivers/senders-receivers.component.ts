@@ -3,8 +3,18 @@ import { FormGroup, FormArray, Validators, FormBuilder } from '@angular/forms';
 
 const defaultSendersCount = 3;
 const defaultReceiversCount = 5;
-const defaultSenders = [500, 340, 220];
-const defaultReceivers = [275, 190, 135, 210, 250];
+// MY
+// const defaultSenders = [500, 340, 220];
+// const defaultReceivers = [275, 190, 135, 210, 250];
+// const defaultOuterStates = [0.2, 0.55, 0.25];
+// KRISTINA
+// const defaultSenders = [200, 240, 130];
+// const defaultReceivers = [75, 90, 135, 120, 150];
+// const defaultOuterStates = [0.17, 0.72, 0.11];
+// MAX
+const defaultSenders = [100, 140, 120];
+const defaultReceivers = [75, 90, 85, 60, 50];
+const defaultOuterStates = [0.3, 0.5, 0.2];
 
 @Component({
   selector: 'app-senders-receivers',
@@ -68,6 +78,17 @@ export class SendersReceiversComponent implements OnInit {
               ),
           ),
         }),
+        outerStates: this.fb.array(
+          Array(3)
+            .fill(0)
+            .map((o, i) =>
+              this.fb.control(defaultOuterStates[i], [
+                Validators.min(0.01),
+                Validators.max(1),
+                Validators.required,
+              ]),
+            ),
+        ),
       },
       {
         validators: [
@@ -84,6 +105,16 @@ export class SendersReceiversComponent implements OnInit {
               ? null
               : { sumMissmatch: 'Senders and receivers sum doesnt match!' };
           },
+          (form: FormGroup) => {
+            const outerStatesSum = form.controls.outerStates.value.reduce(
+              (a, b) => a + b,
+              0,
+            );
+
+            return outerStatesSum === 1
+              ? null
+              : { outerStatesSum: 'Outer states sum must be equal to 1!' };
+          },
         ],
       },
     );
@@ -97,6 +128,10 @@ export class SendersReceiversComponent implements OnInit {
 
   get receivers() {
     return this.receiversGroup.controls.array.value;
+  }
+
+  get outerStates() {
+    return this.form.controls.outerStates.value;
   }
 
   private fitArray(array: FormArray, size: number) {

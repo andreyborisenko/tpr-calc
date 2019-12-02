@@ -1,0 +1,62 @@
+<mat-card class="mb-3">
+  <mat-card-header>
+    <mat-card-title>
+      Base - E
+      <span *ngIf="index > 1" class="subsup"
+        ><sup>{{ index - 1 }}</sup
+        ><sub *ngIf="prevSolutionResult">{{
+          prevSolutionResult.bestResultIndex
+        }}</sub></span
+      >
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <app-problem-data-display
+      [costs]="costs"
+      [path]="path"
+      [originalResult]="originalResult"
+    >
+    </app-problem-data-display>
+  </mat-card-content>
+</mat-card>
+
+<mat-card
+  *ngFor="let solution of solutions.slice(1); let i = index"
+  class="mb-3"
+>
+  <mat-card-header>
+    <mat-card-title>
+      E
+      <span class="subsup"
+        ><sup>{{ index }}</sup
+        ><sub>{{ i + 1 }}</sub></span
+      >&nbsp;&sigma;&nbsp;<span class="subsup"
+        ><sup>{{ index }}</sup
+        ><sub>{{ solution.accent.i + 1 }}{{ solution.accent.j + 1 }}</sub></span
+      >
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <app-problem-table
+      class="mb-4"
+      [costs]="costs"
+      [changes]="solution.changes"
+    ></app-problem-table>
+    <app-problem-data-display
+      [costs]="costs"
+      [path]="solution.path"
+      [originalResult]="originalResult"
+      [solutionIndexes]="{
+        sup: index,
+        sub: solution.accent.i + 1 + '' + (solution.accent.j + 1)
+      }"
+    >
+    </app-problem-data-display>
+  </mat-card-content>
+</mat-card>
+<app-criterion
+  [outerStates]="outerStates"
+  [criterion]="criterion"
+  [matrix]="collectSolutions()"
+  [solutionIndex]="index"
+></app-criterion>

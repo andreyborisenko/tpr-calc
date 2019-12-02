@@ -144,11 +144,16 @@ export class TransportationProblemService {
     const resPath = [];
 
     for (let i = 0; i < path.length; i++) {
+      resPath.push([]);
       for (let j = 0; j < path[i].length; j++) {
         resPath[i][j] = path[i][j] + changes[i][j];
       }
     }
 
     return resPath;
+  }
+
+  transformToWasteMatrix(matrix: Matrix) {
+    return matrix.map(r => r.map(c => c * -1));
   }
 }

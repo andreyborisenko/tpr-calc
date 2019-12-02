@@ -1,0 +1,25 @@
+:host {
+  div {
+    overflow-x: auto;
+    table {
+      overflow-x: auto;
+      border: 1px solid black;
+      border-collapse: collapse;
+
+      td {
+        border: 1px solid black;
+        padding: 3px 4px;
+      }
+
+      thead td {
+        font-weight: bold;
+        font-size: 0.9rem;
+      }
+
+      tr td:first-child {
+        font-weight: bold;
+        font-size: 1.3rem;
+      }
+    }
+  }
+}

@@ -10,9 +10,9 @@ const defaultMatrix = [
 ];
 
 const defaultTriangleMatrix = [
-  ['2,4,5', '1,1,2', '1,2,3', '4,7,9', '7,8,9'],
-  ['3,7,8', '5,5,6', '1,3,4', '3,4,5', '4,6,7'],
-  ['5,8,9', '3,4,5', '5,6,7', '2,2,3', '3,5,6'],
+  ['3,4,6', '1,1,3', '1,2,4', '4,7,10', '7,8,10'],
+  ['4,7,8', '2,5,7', '2,3,6', '3,4,5', '3,6,8'],
+  ['5,8,12', '2,4,5', '4,6,9', '1,2,4', '4,5,7'],
 ];
 
 @Component({
@@ -103,18 +103,9 @@ export class MatrixInputComponent implements OnInit {
       this.type === 'default'
         ? r.cells
         : r.cells.map(c => {
-            const [low, mid, high] = c.split(',');
+            const [low, mid, high] = c.split(',').map(n => parseInt(n, 10));
             return new TriangleNumber(low, mid, high);
           }),
     );
   }
-
-  // get trianglesMatrix() {
-  //   return (this.form.controls.rows as FormArray).value.map(r =>
-  //     r.cells.map(c => {
-  //       const [low, mid, high] = c.split(',');
-  //       return new TriangleNubmer(low, mid, high);
-  //     }),
-  //   );
-  // }
 }

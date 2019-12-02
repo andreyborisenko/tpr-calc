@@ -43,6 +43,9 @@ import { SendersReceiversComponent } from './components/senders-receivers/sender
 import { ProblemDataDisplayComponent } from './components/problem-data-display/problem-data-display.component';
 import { ProblemTableComponent } from './components/problem-table/problem-table.component';
 import { ChartsModule } from 'ng2-charts';
+import { CriterionComponent } from './components/criterion/criterion.component';
+import { CycleSolverComponent } from './components/cycle-solver/cycle-solver.component';
+import { CriterionPickerComponent } from './components/criterion-picker/criterion-picker.component';
 
 const matModules = [
   MatCheckboxModule,
@@ -85,6 +88,9 @@ const matModules = [
     SendersReceiversComponent,
     ProblemDataDisplayComponent,
     ProblemTableComponent,
+    CriterionComponent,
+    CycleSolverComponent,
+    CriterionPickerComponent,
   ],
   imports: [
     BrowserModule,
@@ -95,7 +101,11 @@ const matModules = [
     ChartsModule,
     ...matModules,
   ],
-  entryComponents: [ProblemDataDisplayComponent],
+  entryComponents: [
+    ProblemDataDisplayComponent,
+    CycleSolverComponent,
+    CriterionPickerComponent,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

@@ -22,7 +22,7 @@ interface FormulaPart {
   styleUrls: ['./problem-data-display.component.scss'],
 })
 export class ProblemDataDisplayComponent implements OnInit {
-  @Input() type: 'default' | 'triangle' = 'default';
+  @Input() type: 'default' | 'triangle' = 'triangle';
 
   @Input() path?: Matrix;
 
@@ -30,7 +30,7 @@ export class ProblemDataDisplayComponent implements OnInit {
 
   @Input() originalResult: TriangleNumber;
 
-  @Input() accentShipment: Shipment;
+  @Input() solutionIndexes: { sup: number; sub: number };
 
   formulaParts: FormulaPart[] = [];
 
@@ -91,8 +91,6 @@ export class ProblemDataDisplayComponent implements OnInit {
   }
 
   private setChartData() {
-    console.log(this.originalResult);
-
     if (this.originalResult) {
       this.chartColors.unshift({
         borderColor: '#3498db',
@@ -102,10 +100,10 @@ export class ProblemDataDisplayComponent implements OnInit {
       });
     }
 
-    if (this.accentShipment) {
+    if (this.solutionIndexes) {
       this.chartLabels = [
         'Z0',
-        `Z${this.accentShipment.i}${this.accentShipment.j}`,
+        `Z${this.solutionIndexes.sup}${this.solutionIndexes.sub}`,
       ];
     }
 
@@ -131,11 +129,9 @@ export class ProblemDataDisplayComponent implements OnInit {
 
     const result = this.formulaResult as TriangleNumber;
 
-    console.log(result);
-
     this.chartDatasets.push({
-      label: this.accentShipment
-        ? `Z${this.accentShipment.i}${this.accentShipment.j}`
+      label: this.solutionIndexes
+        ? `Z${this.solutionIndexes.sup}-${this.solutionIndexes.sub}`
         : 'F(x)',
       data: [
         {
