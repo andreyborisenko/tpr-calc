@@ -15,6 +15,10 @@ const defaultOuterStates = [0.2, 0.55, 0.25];
 // const defaultSenders = [100, 140, 120];
 // const defaultReceivers = [75, 90, 85, 60, 50];
 // const defaultOuterStates = [0.3, 0.5, 0.2];
+// SANYA
+// const defaultSenders = [120, 80, 100, 60];
+// const defaultReceivers = [65, 60, 85, 50, 60, 40];
+// const defaultOuterStates = [0.3, 0.55, 0.15];
 
 @Component({
   selector: 'app-senders-receivers',

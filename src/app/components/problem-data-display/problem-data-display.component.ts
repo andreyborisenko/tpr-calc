@@ -69,7 +69,7 @@ export class ProblemDataDisplayComponent implements OnInit {
     if (this.path) {
       for (let i = 0; i < this.path.length; i++) {
         for (let j = 0; j < this.path[i].length; j++) {
-          if (this.path[i][j]) {
+          if (this.path[i][j] !== null) {
             this.formulaParts.push({
               amount: this.path[i][j],
               i,

@@ -23,6 +23,20 @@
       Next
     </button>
   </mat-step>
+  <mat-step aria-label="stepping-stone">
+    <ng-template matStepLabel>Stepping stone</ng-template>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Stepping stone
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-stepping-stone-solver [costs]="costsMatrixComponent.matrix">
+        </app-stepping-stone-solver>
+      </mat-card-content>
+    </mat-card>
+  </mat-step>
   <mat-step aria-label="path" [optional]="false" [completed]="isProblemSolved">
     <ng-template matStepLabel>Solution</ng-template>
     <mat-card
@@ -81,19 +95,4 @@
       </mat-card-content>
     </mat-card>
   </mat-step>
-  <!-- <mat-step aria-label="path">
-    <ng-template matStepLabel>NW-corner Path</ng-template>
-    <ng-template #pathContainer></ng-template>
-    <button mat-raised-button matStepperNext class="mt-4">
-      Next
-    </button>
-  </mat-step> -->
-  <!-- <mat-step>
-    <ng-template matStepLabel
-      >РОЗВ’ЯЗОК ТРАНСПОРТНОЇ ЗАДАЧІ ДЛЯ НЕЧІТКИХ ЗНАЧЕНЬ МАТРИЦІ ВИТРАТ ПРИ
-      ТРЬОХ ЗОВНІШНІХ УМОВАХ НА ОСНОВІ SS-МЕТОДУ</ng-template
-    >
-    <app-criterion criterion="minmax" [matrix]="criterionMatrix">
-    </app-criterion>
-  </mat-step> -->
 </mat-vertical-stepper>

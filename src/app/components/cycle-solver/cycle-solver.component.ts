@@ -46,18 +46,19 @@ export class CycleSolverComponent implements OnInit {
       this.costs,
     );
 
-    let changes: Matrix;
-
     this.solutions.push({
       path: this.path,
     });
 
     for (let i = 0; i < this.path.length; i++) {
       for (let j = 0; j < this.path[0].length; j++) {
-        if (this.path[i][j] === 0) {
-          changes = this.trService.getClosedPath(this.path, i, j);
+        if (this.path[i][j] === null) {
+          const {
+            changesMatrix: changes,
+            leaving,
+          } = this.trService.getClosedPath(this.path, i, j);
           this.solutions.push({
-            path: this.trService.updatePath(this.path, changes),
+            path: this.trService.updatePath(this.path, changes, leaving),
             changes,
             accent: {
               i,
@@ -70,7 +71,7 @@ export class CycleSolverComponent implements OnInit {
   }
 
   collectSolutions(): Matrix {
-    return this.trService.transformToWasteMatrix(
+    return this.trService.flipMatrix(
       this.solutions
         .map(s => this.trService.calculateTriangleCost(s.path, this.costs))
         .map(r => r.toArray()),

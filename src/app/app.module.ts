@@ -46,6 +46,8 @@ import { ChartsModule } from 'ng2-charts';
 import { CriterionComponent } from './components/criterion/criterion.component';
 import { CycleSolverComponent } from './components/cycle-solver/cycle-solver.component';
 import { CriterionPickerComponent } from './components/criterion-picker/criterion-picker.component';
+import { SteppingStoneComponent } from './components/stepping-stone/stepping-stone.component';
+import { SteppingStoneSolverComponent } from './components/stepping-stone-solver/stepping-stone-solver.component';
 
 const matModules = [
   MatCheckboxModule,
@@ -91,6 +93,8 @@ const matModules = [
     CriterionComponent,
     CycleSolverComponent,
     CriterionPickerComponent,
+    SteppingStoneComponent,
+    SteppingStoneSolverComponent,
   ],
   imports: [
     BrowserModule,

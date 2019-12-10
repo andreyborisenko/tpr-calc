@@ -9,7 +9,7 @@ export class TransportationProblemService {
     const path = [];
 
     for (let i = 0, nw = 0; i < senders.length; i++) {
-      path.push(Array(receivers.length).fill(0));
+      path.push(Array(receivers.length).fill(null));
       for (let j = nw; j < receivers.length; j++) {
         if (senders[i] > receivers[j]) {
           senders[i] -= receivers[j];
@@ -33,7 +33,7 @@ export class TransportationProblemService {
 
     for (let i = 0; i < costs.length; i++) {
       for (let j = 0; j < costs[0].length; j++) {
-        if (path[i][j]) {
+        if (path[i][j] !== null) {
           sum += path[i][j] * costs[i][j];
         }
       }
@@ -47,7 +47,7 @@ export class TransportationProblemService {
 
     for (let i = 0; i < costs.length; i++) {
       for (let j = 0; j < costs[0].length; j++) {
-        if (path[i][j]) {
+        if (path[i][j] !== null) {
           const { low, high, mid } = costs[i][j];
 
           const [lowCost, midCost, highCost] = [
@@ -68,11 +68,15 @@ export class TransportationProblemService {
     return sum;
   }
 
-  getClosedPath(path: Matrix, startI: number, startJ: number): Matrix {
+  getClosedPath(
+    path: Matrix,
+    startI: number,
+    startJ: number,
+  ): { changesMatrix: Matrix; leaving: Shipment; stones: Shipment[] } {
     const startShipment = { i: startI, j: startJ };
 
     let shipments: Shipment[] = path
-      .map((r, i) => r.map((c, j) => (c ? { i, j } : null)))
+      .map((r, i) => r.map((c, j) => (c !== null ? { i, j } : null)))
       .reduce((a, b) => [...a, ...b], [])
       .filter(s => s);
 
@@ -103,19 +107,27 @@ export class TransportationProblemService {
       prev = this.getNeighbors(prev, shipments)[i % 2];
     }
 
-    const minQuantity = Math.min(
+    let minQuantity = Math.min(
       ...stones.filter((s, i) => i % 2).map(s => path[s.i][s.j]),
     );
 
+    const leaving = stones
+      .filter((s, i) => i % 2)
+      .find(s => path[s.i][s.j] === minQuantity);
+
     const changesMatrix = Array(path.length)
       .fill(0)
-      .map(r => Array(path[0].length).fill(0));
+      .map(r => Array(path[0].length).fill(null));
+
+    if (minQuantity === 0) {
+      minQuantity = 0.0001;
+    }
 
     for (let i = 0; i < stones.length; i++) {
       changesMatrix[stones[i].i][stones[i].j] = minQuantity * (i % 2 ? -1 : 1);
     }
 
-    return changesMatrix;
+    return { changesMatrix, leaving, stones };
   }
 
   getNeighbors(search: Shipment, shipments: Shipment[]): Shipment[] {
@@ -137,23 +149,57 @@ export class TransportationProblemService {
         break;
       }
     }
+
     return neighbors;
   }
 
-  updatePath(path: Matrix, changes: Matrix): Matrix {
+  updatePath(path: Matrix, changes: Matrix, leavingShipment: Shipment): Matrix {
     const resPath = [];
 
     for (let i = 0; i < path.length; i++) {
       resPath.push([]);
       for (let j = 0; j < path[i].length; j++) {
-        resPath[i][j] = path[i][j] + changes[i][j];
+        if (
+          leavingShipment &&
+          leavingShipment.i === i &&
+          leavingShipment.j === j
+        ) {
+          resPath[i][j] = null;
+        } else {
+          resPath[i][j] = changes[i][j]
+            ? Math.round(path[i][j] + changes[i][j])
+            : path[i][j];
+        }
       }
     }
 
     return resPath;
   }
 
-  transformToWasteMatrix(matrix: Matrix) {
+  calculateEnhancementIndex(stones: Shipment[], costs: TrianglesMatrix) {
+    let t = new TriangleNumber(0, 0, 0);
+
+    for (let i = 0; i < stones.length; i++) {
+      const cost = costs[stones[i].i][stones[i].j];
+      if (i % 2) {
+        t = new TriangleNumber(
+          t.low - cost.high,
+          Math.min(t.mid, cost.mid),
+          t.high - cost.low,
+        );
+      } else {
+        t = new TriangleNumber(
+          t.low + cost.low,
+          Math.max(t.mid, cost.mid),
+          t.high + cost.high,
+        );
+      }
+    }
+
+    return t;
+  }
+
+  flipMatrix(matrix: Matrix) {
     return matrix.map(r => r.map(c => c * -1));
   }
 }

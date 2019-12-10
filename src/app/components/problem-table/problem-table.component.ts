@@ -13,7 +13,13 @@ export class ProblemTableComponent implements OnInit {
 
   @Input() changes?: Matrix;
 
+  @Input() showChangesValues = true;
+
   constructor() {}
 
   ngOnInit() {}
+
+  pretty(n: number) {
+    return Number(n).toFixed(0);
+  }
 }
