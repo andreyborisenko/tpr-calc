@@ -25,5 +25,6 @@ export class TriangleNumber {
 
   defuzzify() {
     return Math.floor((1 / 3) * this.toArray().reduce((a, b) => a + b, 0));
+    // return Math.round((this.low + 2 * this.mid + this.high) / 2);
   }
 }

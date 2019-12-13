@@ -60,8 +60,6 @@ export class SteppingStoneComponent implements OnInit {
             this.costs,
           );
 
-          console.log(i, j, enhancementIndex.toString());
-
           if (!enhancementIndex.isValid) {
             console.log(`Invalid enhancement index`);
             continue;

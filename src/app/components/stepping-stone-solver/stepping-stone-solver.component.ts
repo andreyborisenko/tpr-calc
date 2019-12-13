@@ -34,7 +34,6 @@ export class SteppingStoneSolverComponent implements OnInit {
   ngOnInit() {}
 
   solve(path: Matrix) {
-    console.log(path, this.costs);
     this.path = path;
     this.steps.push({
       path: this.path,

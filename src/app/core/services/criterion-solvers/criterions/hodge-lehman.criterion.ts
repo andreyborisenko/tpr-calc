@@ -30,7 +30,16 @@ export class HodjeLehmanCriterion extends CriterionSolver {
       }
     }
 
-    const computationsMatrix = [minInRow, ...results];
+    const { deviations, deviationsResult } = this.calculateDeviation(
+      matrix.map(r => r.map(c => c * -1)),
+    );
+
+    const computationsMatrix = [
+      minInRow,
+      ...results,
+      deviations,
+      deviationsResult,
+    ];
 
     return {
       additionalCompNames: [
@@ -39,11 +48,15 @@ export class HodjeLehmanCriterion extends CriterionSolver {
           .fill(0)
           .map((c, i) => 'v = ' + `${i / 10}`.padStart(3, '0.')),
         'c = 1.0',
+        'ξ = ξ(Z,0)',
+        'min ξ',
       ],
       additionalComputations: computationsMatrix[0].map((c, j) =>
         computationsMatrix.map(r => r[j]),
       ),
-      bestResultIndex: 0,
+      bestResultIndex: +Object.entries(bestIndexesCount)
+        .sort((a, b) => b[1] - a[1])
+        .shift()[0],
     };
   }
 }

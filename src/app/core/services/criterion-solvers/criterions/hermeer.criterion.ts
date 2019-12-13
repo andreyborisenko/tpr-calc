@@ -8,11 +8,26 @@ export class HermeerCriterion extends CriterionSolver {
       r.map((c, j) => +Number(c * outerStates[j]).toFixed(0)),
     );
 
-    const results = computationsMatrix.map(r => Math.min(...r));
+    const eir = computationsMatrix.map(r => Math.min(...r));
+
+    const { deviations, deviationsResult } = this.calculateDeviation(
+      matrix.map(r => r.map(c => c * -1)),
+    );
 
     for (let i = 0; i < computationsMatrix.length; i++) {
-      computationsMatrix[i].push(results[i]);
+      computationsMatrix[i].push(eir[i], deviations[i], deviationsResult[i]);
     }
+
+    const max = Math.max(...eir);
+
+    const bestResults = eir
+      .map((r, i) => (r === max ? i : null))
+      .filter(i => i !== null);
+
+    const bestResultIndex =
+      bestResults.length === 1
+        ? bestResults[0]
+        : this.calculateBestIndex(bestResults, deviations);
 
     return {
       additionalCompNames: [
@@ -20,9 +35,11 @@ export class HermeerCriterion extends CriterionSolver {
           .fill(0)
           .map((_, j) => `e i${j} * q${j}`),
         'e ir',
+        'ξ = ξ(Z,0)',
+        'min ξ',
       ],
       additionalComputations: computationsMatrix,
-      bestResultIndex: results.indexOf(Math.max(...results)),
+      bestResultIndex,
     };
   }
 }

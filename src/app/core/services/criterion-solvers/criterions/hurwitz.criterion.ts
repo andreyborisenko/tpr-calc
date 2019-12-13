@@ -30,7 +30,17 @@ export class HurwitzCriterion extends CriterionSolver {
       }
     }
 
-    const computationsMatrix = [maxInRow, minInRow, ...results];
+    const { deviations, deviationsResult } = this.calculateDeviation(
+      matrix.map(r => r.map(c => c * -1)),
+    );
+
+    const computationsMatrix = [
+      maxInRow,
+      minInRow,
+      ...results,
+      deviations,
+      deviationsResult,
+    ];
 
     return {
       additionalCompNames: [
@@ -40,6 +50,8 @@ export class HurwitzCriterion extends CriterionSolver {
           .fill(0)
           .map((c, i) => 'c = ' + `${i / 10}`.padStart(3, '0.')),
         'c = 1.0',
+        'ξ = ξ(Z,0)',
+        'min ξ',
       ],
       additionalComputations: computationsMatrix[0].map((c, j) =>
         computationsMatrix.map(r => r[j]),
